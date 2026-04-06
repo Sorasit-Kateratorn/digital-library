@@ -16,7 +16,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from apps.user.views import UserView
+from apps.reading.views import ReadingView
+from apps.readingprogress.views import ReadingProgressView
+from apps.book.views import BookView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('book/', BookView.as_view()),
+    path('book/<int:pk>/', BookView.as_view()),
+    path('user/', UserView.as_view()),
+    path('user/<int:pk>/', UserView.as_view()),
+    path('reading/', ReadingView.as_view()),
+    path('reading/<int:pk>/', ReadingView.as_view()),
+    path('readingprogress/', ReadingProgressView.as_view()),
+    path('readingprogress/<int:pk>/', ReadingProgressView.as_view()),
+    
 ]
