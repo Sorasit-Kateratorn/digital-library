@@ -8,3 +8,28 @@ section {
   padding-top: 4rem;
   padding-bottom: 4rem;
 }
+
+.signup-container {
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.signup-card {
+  background-color: #1a1d20;
+  width: 100%;
+  max-width: 500px;
+}
+
+.form-control::placeholder {
+  color: #6c757d;
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: #212529 !important;
+  border-color: #198754 !important;
+  color: #f8f9fa !important;
+  box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25) !important;
+}
+
+.login-hover-text-light:hover {
+  color: #198754 !important;
+}

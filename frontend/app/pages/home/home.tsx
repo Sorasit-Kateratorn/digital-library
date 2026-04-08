@@ -20,7 +20,7 @@ export function Home() {
                     </button>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <div className="ms-auto">
-                            <button className="btn btn-success me-2">Sign up</button>
+                            <a href="/signup" className="btn btn-success me-2">Sign up</a>
                             <button className="btn btn-outline-success">
                                 <i className="bi bi-box-arrow-in-right me-2"></i>
                                 Login
