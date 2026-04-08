@@ -13,7 +13,8 @@ class Book(models.Model):
     created_at = models.DateField(auto_now_add=True)
     genre = models.CharField(max_length=50, choices=Genre.choices, default=Genre.ROMANCE)
     page = models.IntegerField()
-    published = models.DateField()
+    published = models.DateField(null=True, blank=True)
+    cover_image = models.URLField(max_length=500, blank=True, null=True)
 
 
     class Meta:
