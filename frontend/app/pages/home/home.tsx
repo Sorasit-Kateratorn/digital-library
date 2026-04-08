@@ -21,10 +21,10 @@ export function Home() {
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <div className="ms-auto">
                             <a href="/signup" className="btn btn-success me-2">Sign up</a>
-                            <button className="btn btn-outline-success">
+                            <a href="/login" className="btn btn-outline-success">
                                 <i className="bi bi-box-arrow-in-right me-2"></i>
                                 Login
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -37,7 +37,7 @@ export function Home() {
                                 <h1 className="mb-2">Track Your Reading Journey</h1>
                                 <p className="fs-5 text-secondary mb-4">Monitor your reading progress, rate your favorite books, and achieve your reading goals.</p>
                                 <div>
-                                    <button className="btn btn-success me-2">Get Started</button>
+                                    <a href="/login" className="btn btn-success me-2">Get Started</a>
                                     <button className="btn btn-outline-success">
                                         <i className="bi bi-box-arrow-in-right me-2"></i>
                                         Browse Books
