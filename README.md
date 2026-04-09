@@ -3,155 +3,113 @@ Final project for Software Architecture
 
 This project is a full-stack digital library system developed as the final project for the Software Architecture course.
 
-The system is built using:
-
-- **Backend:** Django + Django REST Framework + SQLite
-- **Frontend:** React + Vite + Bootstrap
 
 ---
 
-## How to Run the System
+## Project Description
 
-### 1. Clone the Repository
+The Digital Library is a web-based reading platform designed to help users organize their personal library and improve their reading experience.
 
-```bash
-git clone https://github.com/Sorasit-Kateratorn/digital-library.git
-cd digital-library
-````
+The system solves the problem of users struggling to:
+- track their reading progress
+- manage books in one place
+- discover books that match their interests
 
----
-
-# Backend Setup
-
-Open terminal and go to the backend folder.
-
-```bash
-cd backend
-```
+Unlike traditional book-selling platforms, this system focuses on **personal reading management**.
 
 ---
 
-## 2. Create Virtual Environment
+## System Architecture Overview
 
-```bash
-python -m venv .venv
-```
+This project follows a **Layered Architecture** design.
 
-Activate the environment.
+The system is separated into multiple layers:
 
-### Windows
+- **Presentation Layer**
+  - React frontend
+  - user interface
+  - forms, pages, and navigation
 
-```bash
-.venv\Scripts\activate
-```
+- **Application Layer**
+  - Django REST Framework API
+  - request handling
+  - authentication and business logic
 
----
+- **Data Access Layer**
+  - Django ORM
+  - database queries and model relationships
 
-## 3. Install Python Dependencies
+- **Database Layer**
+  - SQLite database
+  - stores users, books, reviews, and reading progress
 
-```bash
-pip install -r requirements.txt
-```
+Architecture flow:
 
----
+Frontend → REST API → Service Logic → Database
 
-## 4. Configure Environment Variables
-
-Create a `.env` file inside the `backend` folder.
-
-Example:
-
-```env
-GOOGLE_BOOKS_API_KEY=your_google_books_api_key
-```
-
-This API key is required for loading initial book data from Google Books API.
+This architecture improves maintainability, scalability, and separation of concerns.
 
 ---
 
-## 5. Apply Database Migrations
+## User Roles & Permissions
 
-```bash
-python manage.py migrate
-```
+### Reader (User)
+Permissions:
+- register and login
+- search books
+- add books to personal library
+- update reading progress
+- rate and review books
+- view recommendations
 
-This command creates the database schema based on Django models.
+### Admin
+Permissions:
+- manage users
+- manage genres
+- manage book catalog
+- remove inappropriate reviews
+- view reports
 
----
-
-## 6. Load Initial Book Data
-
-Run the data loading script to fetch and insert sample books into the database.
-
-```bash
-cd scripts
-python load-book-data.py
-cd ..
-```
-
-This step is required before running the frontend so that books are available in the system.
-
----
-
-## 7. Create Superuser (Optional)
-
-For accessing Django admin panel:
-
-```bash
-python manage.py createsuperuser
-```
+### Librarian
+Permissions:
+- approve or hide reviews
+- handle reported content
 
 ---
 
-## 8. Run Backend Server
+## Core Features
 
-```bash
-python manage.py runserver
-```
-
-Backend will run at:
-
-```text
-http://127.0.0.1:8000/
-```
+- User registration and authentication
+- Add books to personal library
+- Track reading progress
+- Rate and review books
+- Smart recommendation system
+- Search and filter by genre
+- Admin moderation system
 
 ---
 
-# Frontend Setup
+## Technology Stack
 
-Open a **new terminal** and go to the frontend folder.
+### Backend
+- Django
+- Django REST Framework
+- SQLite
+- JWT Authentication
 
-```bash
-cd frontend
-```
+### Frontend
+- React
+- Vite
+- Bootstrap
+- React Router
 
----
-
-## 9. Install Frontend Dependencies
-
-```bash
-npm install
-```
-
----
-
-## 10. Run Frontend Server
-
-```bash
-npm run dev
-```
-
-Frontend will run at:
-
-```text
-http://localhost:5173/
-```
+### External APIs
+- Google Books API
 
 ---
 
-# Important Notes
+## Installation & Setup Instructions
 
-* Make sure the **backend server is running before starting the frontend**
-* Both frontend and backend should run at the same time
-* Initial book data must be loaded before using the system
+For full installation steps, please see [INSTALLATION.md](INSTALLATION.md)
 
+---
