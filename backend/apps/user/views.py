@@ -4,7 +4,17 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import User
 from .serializers import UserSerializers
+from django.contrib.auth import authenticate
+from rest_framework.permissions import IsAuthenticated
 # Create your views here.
+
+class ProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserSerializers(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 class UserView(APIView):
     def get(self, request, pk=None): # pk = primary key = id
         if pk:

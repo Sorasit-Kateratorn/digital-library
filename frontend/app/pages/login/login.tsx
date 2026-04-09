@@ -1,4 +1,56 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router';
+
 export function Login() {
+    const navigate = useNavigate();
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            // 1. Get tokens
+            const tokenResponse = await fetch('http://localhost:8000/api/token/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username,
+                    password
+                }),
+            });
+            
+            if (tokenResponse.ok) {
+                const tokenData = await tokenResponse.json();
+                localStorage.setItem('access_token', tokenData.access);
+                localStorage.setItem('refresh_token', tokenData.refresh);
+                
+                // 2. Get user profile
+                const profileResponse = await fetch('http://localhost:8000/user/profile/', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${tokenData.access}`
+                    }
+                });
+                
+                if (profileResponse.ok) {
+                    const userData = await profileResponse.json();
+                    // Store user data to maintain backward compatibility for other components
+                    localStorage.setItem('user', JSON.stringify(userData));
+                    navigate('/main');
+                } else {
+                    alert('Could not fetch user profile details');
+                }
+            } else {
+                const errorData = await tokenResponse.json();
+                alert(`Login failed: ${errorData.detail || 'Invalid credentials'}`);
+            }
+        } catch (error) {
+            alert(`An error occurred: ${error}`);
+        }
+    };
+
     return (
         <div className="min-vh-100 bg-black d-flex flex-column align-items-center justify-content-center py-5 signup-container">
             <div className="mb-4 text-center">
@@ -15,7 +67,7 @@ export function Login() {
                         Sign in to your account to continue tracking your reading progress
                     </p>
 
-                    <form>
+                    <form onSubmit={handleSubmit}>
                         <div className="mb-3">
                             <label htmlFor="username" className="form-label small fw-bold">Username</label>
                             <input 
@@ -23,6 +75,9 @@ export function Login() {
                                 type="text" 
                                 className="form-control bg-dark text-light border-secondary border-opacity-50" 
                                 placeholder="ith007" 
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
                             />
                         </div>
 
@@ -33,6 +88,9 @@ export function Login() {
                                 type="password" 
                                 className="form-control bg-dark text-light border-secondary border-opacity-50" 
                                 placeholder="••••••••" 
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
                             />
                         </div>
 

@@ -1,4 +1,45 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router';
+
 export function Signup() {
+    const navigate = useNavigate();
+    const [firstname, setFirstname] = useState('');
+    const [lastname, setLastname] = useState('');
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [gender, setGender] = useState('Male');
+    const [role, setRole] = useState('User');
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            const response = await fetch('http://localhost:8000/user/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    first_name: firstname,
+                    last_name: lastname,
+                    username,
+                    email,
+                    password,
+                    gender,
+                    role
+                }),
+            });
+            if (response.ok) {
+                navigate('/main');
+            } else {
+                const errorData = await response.json();
+                alert(`Registration failed: ${JSON.stringify(errorData)}`);
+            }
+        } catch (error) {
+            alert(`An error occurred: ${error}`);
+        }
+    };
+
     return (
         <div className="min-vh-100 bg-black d-flex flex-column align-items-center justify-content-center py-5 signup-container">
             <div className="mb-4 text-center">
@@ -15,7 +56,7 @@ export function Signup() {
                         Sign up to continue tracking your reading progress
                     </p>
 
-                    <form>
+                    <form onSubmit={handleSubmit}>
                         <div className="row mb-3">
                             <div className="col-6">
                                 <label htmlFor="firstname" className="form-label small fw-bold">First Name</label>
@@ -24,6 +65,9 @@ export function Signup() {
                                     type="text" 
                                     className="form-control bg-dark text-light border-secondary border-opacity-50" 
                                     placeholder="Sorasit" 
+                                    value={firstname}
+                                    onChange={(e) => setFirstname(e.target.value)}
+                                    required
                                 />
                             </div>
                             <div className="col-6">
@@ -33,6 +77,9 @@ export function Signup() {
                                     type="text" 
                                     className="form-control bg-dark text-light border-secondary border-opacity-50" 
                                     placeholder="Kateratorn" 
+                                    value={lastname}
+                                    onChange={(e) => setLastname(e.target.value)}
+                                    required
                                 />
                             </div>
                         </div>
@@ -44,6 +91,9 @@ export function Signup() {
                                 type="text" 
                                 className="form-control bg-dark text-light border-secondary border-opacity-50" 
                                 placeholder="ith007" 
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
                             />
                         </div>
 
@@ -54,6 +104,9 @@ export function Signup() {
                                 type="email" 
                                 className="form-control bg-dark text-light border-secondary border-opacity-50" 
                                 placeholder="you@gmail.com" 
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
                             />
                         </div>
 
@@ -64,20 +117,33 @@ export function Signup() {
                                 type="password" 
                                 className="form-control bg-dark text-light border-secondary border-opacity-50" 
                                 placeholder="••••••••" 
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
                             />
                         </div>
 
                         <div className="row mb-4">
                             <div className="col-6">
                                 <label htmlFor="gender" className="form-label small fw-bold">Gender</label>
-                                <select id="gender" className="form-select bg-dark text-light border-secondary border-opacity-50">
+                                <select 
+                                    id="gender" 
+                                    className="form-select bg-dark text-light border-secondary border-opacity-50"
+                                    value={gender}
+                                    onChange={(e) => setGender(e.target.value)}
+                                >
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
                                 </select>
                             </div>
                             <div className="col-6">
                                 <label htmlFor="role" className="form-label small fw-bold">Role</label>
-                                <select id="role" className="form-select bg-dark text-light border-secondary border-opacity-50">
+                                <select 
+                                    id="role" 
+                                    className="form-select bg-dark text-light border-secondary border-opacity-50"
+                                    value={role}
+                                    onChange={(e) => setRole(e.target.value)}
+                                >
                                     <option value="User">User</option>
                                     <option value="Admin">Admin</option>
                                     <option value="Librarian">Librarian</option>
@@ -92,7 +158,7 @@ export function Signup() {
 
                     <div className="text-center mt-4 pt-2">
                         <p className="small text-secondary mb-2">
-                            Already have an account? <a href="#" className="text-success text-decoration-none">Sign in</a>
+                            Already have an account? <a href="/login" className="text-success text-decoration-none">Sign in</a>
                         </p>
                         <a href="/" className="small text-secondary text-decoration-none login-hover-text-light">
                             Back to Home

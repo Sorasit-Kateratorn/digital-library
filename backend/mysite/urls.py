@@ -16,13 +16,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from apps.user.views import UserView
+from apps.user.views import UserView, ProfileView
 from apps.reading.views import ReadingView
 from apps.readingprogress.views import ReadingProgressView
 from apps.book.views import BookView
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('user/profile/', ProfileView.as_view(), name='user_profile'),
     path('book/', BookView.as_view()),
     path('book/<int:pk>/', BookView.as_view()),
     path('user/', UserView.as_view()),
