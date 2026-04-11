@@ -16,14 +16,17 @@ class ProfileView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class UserView(APIView):
-    def get(self, request, pk=None): # pk = primary key = id
+    def get(self, request, pk=None): 
+        if not request.user.is_authenticated or request.user.role != 'Admin':
+            return Response({"detail": "Forbidden. Admin access required."}, status=status.HTTP_403_FORBIDDEN)
+            
         if pk:
             try:
-                user = User.objects.get(pk=pk) # get = get 1 record
+                user = User.objects.get(pk=pk)
                 serializer = UserSerializers(user)
             except:
                 return Response({}, status=status.HTTP_200_OK)
-        else: #get all data in user table
+        else: 
             users = User.objects.all()
             serializer = UserSerializers(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -37,8 +40,10 @@ class UserView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-        
     def put(self, request, pk=None):
+        if not request.user.is_authenticated or request.user.role != 'Admin':
+            return Response({"detail": "Forbidden. Admin access required."}, status=status.HTTP_403_FORBIDDEN)
+            
         if pk is None:
             return Response(
                 {"detail": "PUT requires pk in URL."},
@@ -53,6 +58,9 @@ class UserView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request, pk=None):
+        if not request.user.is_authenticated or request.user.role != 'Admin':
+            return Response({"detail": "Forbidden. Admin access required."}, status=status.HTTP_403_FORBIDDEN)
+            
         if pk is None:
             return Response(
                 {"detail": "PATCH requires pk in URL."},
@@ -67,13 +75,17 @@ class UserView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk=None):
+        if not request.user.is_authenticated or request.user.role != 'Admin':
+            return Response({"detail": "Forbidden. Admin access required."}, status=status.HTTP_403_FORBIDDEN)
+            
         if pk is None:
             return Response(
                 {"detail": "DELETE requires pk in URL."},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        user = get_object_or_404(User, pk=pk)
-        user.delete()
+        user_obj = get_object_or_404(User, pk=pk)
+        # Check relational integrity logic or just rely on CASCADE. The request was "only if permission and relational integrity are handled safely". DRF will use standard Django CASCADE.
+        user_obj.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
         

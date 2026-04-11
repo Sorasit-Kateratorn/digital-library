@@ -7,7 +7,6 @@ export function Signup() {
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
     const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [gender, setGender] = useState("Male");
     const [role, setRole] = useState("User");

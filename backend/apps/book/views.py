@@ -19,6 +19,9 @@ class BookView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request):
+        if not request.user.is_authenticated or request.user.role not in ['Librarian', 'Admin']:
+            return Response({"detail": "Forbidden. Librarian or Admin access required."}, status=status.HTTP_403_FORBIDDEN)
+            
         serializer = BookSerializers(data=request.data)
         
         if serializer.is_valid():
@@ -29,6 +32,9 @@ class BookView(APIView):
         
         
     def put(self, request, pk=None):
+        if not request.user.is_authenticated or request.user.role not in ['Librarian', 'Admin']:
+            return Response({"detail": "Forbidden. Librarian or Admin access required."}, status=status.HTTP_403_FORBIDDEN)
+            
         if pk is None:
             return Response(
                 {"detail": "PUT requires pk in URL."},
@@ -43,6 +49,9 @@ class BookView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request, pk=None):
+        if not request.user.is_authenticated or request.user.role not in ['Librarian', 'Admin']:
+            return Response({"detail": "Forbidden. Librarian or Admin access required."}, status=status.HTTP_403_FORBIDDEN)
+            
         if pk is None:
             return Response(
                 {"detail": "PATCH requires pk in URL."},
@@ -57,6 +66,9 @@ class BookView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk=None):
+        if not request.user.is_authenticated or request.user.role not in ['Librarian', 'Admin']:
+            return Response({"detail": "Forbidden. Librarian or Admin access required."}, status=status.HTTP_403_FORBIDDEN)
+            
         if pk is None:
             return Response(
                 {"detail": "DELETE requires pk in URL."},
