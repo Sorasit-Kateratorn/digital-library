@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { useToast } from "../../hooks/useToast";
 
 export function Main() {
+    const { showToast } = useToast();
     const [readings, setReadings] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [genreFilter, setGenreFilter] = useState("All Genres");
@@ -51,7 +53,7 @@ export function Main() {
         if (!updatingReading) return;
         const pageNum = parseInt(newPage as string, 10);
         if (isNaN(pageNum) || pageNum < 0 || pageNum > updatingReading.book.page) {
-            alert(`Please enter a valid page number between 0 and ${updatingReading.book.page}.`);
+            showToast(`Please enter a valid page number between 0 and ${updatingReading.book.page}.`, "warning");
             return;
         }
 
@@ -92,12 +94,13 @@ export function Main() {
                 setNewPage("");
                 setSummary("");
                 setNewRating(0);
+                showToast("Progress and rating updated successfully!", "success");
             } else {
-                alert("Failed to update progress and rating.");
+                showToast("Failed to update progress and rating.", "danger");
             }
         } catch (error) {
             console.error(error);
-            alert("Error updating progress.");
+            showToast("Error updating progress.", "danger");
         } finally {
             setSubmittingProgress(false);
         }
@@ -146,9 +149,7 @@ export function Main() {
                     <h4 className="text-success m-0 fw-bold">BookTracker</h4>
                 </div>
                 <div>
-                    <Link to="/" className="btn btn-outline-secondary text-light me-2 rounded-pill px-3 py-1 border-secondary">
-                        Home
-                    </Link>
+                    <button onClick={() => { localStorage.removeItem('access_token'); localStorage.removeItem('refresh_token'); localStorage.removeItem('user'); navigate('/login'); }} className="btn btn-outline-danger text-light me-2 rounded-pill px-3 py-1 border-danger">Log Out</button>
                     <Link to="/catalog" className="btn btn-outline-secondary text-light me-2 rounded-pill px-3 py-1 border-secondary">
                         Browse Books
                     </Link>
@@ -245,11 +246,11 @@ export function Main() {
                                             <div className="d-flex h-100 gap-3">
                                                 <div className="flex-shrink-0" style={{ width: "80px" }}>
                                                     <img
-                                                        src={reading.book.cover_image || "https://placehold.co/150x225/222/999?text=No+Cover&font=monospace"}
+                                                        src={reading.book.cover_image || "https://placehold.co/150x225/222/999?text=N/A&font=monospace"}
                                                         alt={`${reading.book.name} cover`}
                                                         style={{ width: "100%", objectFit: "cover", aspectRatio: "2/3", borderRadius: "6px", border: "1px solid #333" }}
                                                         onError={(e) => {
-                                                            e.currentTarget.src = "https://placehold.co/150x225/222/999?text=No+Cover&font=monospace";
+                                                            e.currentTarget.src = "https://placehold.co/150x225/222/999?text=N/A&font=monospace";
                                                         }}
                                                     />
                                                 </div>

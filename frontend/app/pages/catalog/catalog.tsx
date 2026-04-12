@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { useToast } from "../../hooks/useToast";
 
 export function Catalog() {
+    const { showToast } = useToast();
     const [books, setBooks] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [genreFilter, setGenreFilter] = useState("All Genres");
@@ -55,13 +57,13 @@ export function Catalog() {
             });
 
             if (response.ok || response.status === 201) {
-                alert("Book added to your library successfully!");
+                showToast("Book added to your library successfully!", "success");
             } else {
-                alert("Failed to add book or it's already in your library.");
+                showToast("Failed to add book or it's already in your library.", "warning");
             }
         } catch (error) {
             console.error("Failed to add book:", error);
-            alert("Error adding book to library.");
+            showToast("Error adding book to library.", "danger");
         } finally {
             setAddingBooks(prev => ({...prev, [bookId]: false}));
         }
@@ -84,7 +86,7 @@ export function Catalog() {
                     <h4 className="text-success m-0 fw-bold">BookTracker</h4>
                 </div>
                 <div>
-                    <Link to="/" className="btn btn-outline-secondary text-light me-2 rounded-pill px-3 py-1 border-secondary">Home</Link>
+                    <button onClick={() => { localStorage.removeItem('access_token'); localStorage.removeItem('refresh_token'); localStorage.removeItem('user'); navigate('/login'); }} className="btn btn-outline-danger text-light me-2 rounded-pill px-3 py-1 border-danger">Log Out</button>
                     <Link to="/main" className="btn btn-outline-secondary text-light me-2 rounded-pill px-3 py-1 border-secondary">My Library</Link>
                 </div>
             </div>

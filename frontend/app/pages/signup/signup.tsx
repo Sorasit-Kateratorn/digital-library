@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { signupUser } from "../../api/auth";
+import { useToast } from "../../hooks/useToast";
 
 export function Signup() {
+    const { showToast } = useToast();
     const navigate = useNavigate();
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
@@ -23,13 +25,14 @@ export function Signup() {
                 role,
             });
             if (response.ok) {
-                navigate("/main");
+                showToast("Registration successful! Please log in.", "success");
+                navigate("/login");
             } else {
                 const errorData = await response.json();
-                alert(`Registration failed: ${JSON.stringify(errorData)}`);
+                showToast(`Registration failed: ${JSON.stringify(errorData)}`, "danger");
             }
         } catch (error) {
-            alert(`An error occurred: ${error}`);
+            showToast(`An error occurred: ${error}`, "danger");
         }
     };
 

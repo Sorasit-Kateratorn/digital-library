@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { loginUser, getUserProfile } from "../../api/auth";
+import { useToast } from "../../hooks/useToast";
 
 export function Login() {
+    const { showToast } = useToast();
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -27,16 +29,17 @@ export function Login() {
                     const userData = await profileResponse.json();
 
                     localStorage.setItem("user", JSON.stringify(userData));
+                    showToast(`Welcome back, ${userData.username}!`, "success");
                     navigate("/main");
                 } else {
-                    alert("Could not fetch user profile");
+                    showToast("Could not fetch user profile.", "danger");
                 }
             } else {
                 const errorData = await tokenResponse.json();
-                alert(`Login failed: ${errorData.detail}`);
+                showToast(`Login failed: ${errorData.detail || "Invalid credentials"}`, "danger");
             }
         } catch (error) {
-            alert(`An error occurred: ${error}`);
+            showToast(`An error occurred: ${error}`, "danger");
         }
     };
 

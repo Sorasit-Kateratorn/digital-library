@@ -36,8 +36,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
     );
 }
 
+import { ToastProvider } from "./context/ToastContext";
+
 export default function App() {
-    return <Outlet />;
+    return (
+        <ToastProvider>
+            <Outlet />
+        </ToastProvider>
+    );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { useToast } from "../../hooks/useToast";
 
 export function Admin() {
+    const { showToast } = useToast();
     const [users, setUsers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -60,7 +62,7 @@ export function Admin() {
 
     const handleAddUser = async () => {
         if (!newUsername || !newPassword) {
-            alert("Username and password are required.");
+            showToast("Username and password are required.", "warning");
             return;
         }
 
@@ -86,13 +88,14 @@ export function Admin() {
                 setNewUsername("");
                 setNewPassword("");
                 setNewRole("User");
+                showToast(`User "${newUsername}" added successfully!`, "success");
             } else {
                 const errData = await response.json();
-                alert(`Failed to add user: ${JSON.stringify(errData)}`);
+                showToast(`Failed to add user: ${JSON.stringify(errData)}`, "danger");
             }
         } catch (err) {
             console.error(err);
-            alert("Error trying to process the request.");
+            showToast("Error trying to process the request.", "danger");
         } finally {
             setSubmittingUser(false);
         }
@@ -112,12 +115,13 @@ export function Admin() {
 
             if (response.ok || response.status === 204) {
                 setUsers(users.filter(u => u.id !== userId));
+                showToast("User deleted successfully.", "success");
             } else {
-                alert("Failed to delete the user. You may not have administrative privileges.");
+                showToast("Failed to delete the user.", "danger");
             }
         } catch (err) {
             console.error(err);
-            alert("An error occurred while attempting to delete.");
+            showToast("An error occurred while attempting to delete.", "danger");
         }
     };
 
@@ -143,7 +147,7 @@ export function Admin() {
                     <h4 className="text-success m-0 fw-bold">BookTracker</h4>
                 </div>
                 <div>
-                    <Link to="/" className="btn btn-outline-secondary text-light me-2 rounded-pill px-3 py-1 border-secondary">Home</Link>
+                    <button onClick={() => { localStorage.removeItem('access_token'); localStorage.removeItem('refresh_token'); localStorage.removeItem('user'); navigate('/login'); }} className="btn btn-outline-danger text-light me-2 rounded-pill px-3 py-1 border-danger">Log Out</button>
                     <Link to="/main" className="btn btn-outline-secondary text-light me-2 rounded-pill px-3 py-1 border-secondary">My Library</Link>
                     <Link to="/catalog" className="btn btn-outline-secondary text-light me-2 rounded-pill px-3 py-1 border-secondary">Browse Books</Link>
                     {(currentUser?.role === 'Librarian' || currentUser?.role === 'Admin') && (

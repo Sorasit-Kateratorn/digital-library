@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { useToast } from "../../hooks/useToast";
 
 export function Librarian() {
+    const { showToast } = useToast();
     const [books, setBooks] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -17,7 +19,6 @@ export function Librarian() {
     const [newGenre, setNewGenre] = useState("Fiction");
     const [newPageCount, setNewPageCount] = useState<number | "">("");
     const [newPublished, setNewPublished] = useState("");
-    const [newCover, setNewCover] = useState("");
     const [currentUser, setCurrentUser] = useState<any>(null);
 
     const fetchBooks = async () => {
@@ -63,8 +64,20 @@ export function Librarian() {
 
     const handleAddBook = async () => {
         if (!newName || !newAuthor) {
-            alert("Title and Author are required fields.");
+            showToast("Title and Author are required fields.", "warning");
             return;
+        }
+        
+        if (newPublished !== "") {
+            if (!/^\d{4}$/.test(newPublished)) {
+                showToast("Published year must be a 4-digit number.", "warning");
+                return;
+            }
+            const year = parseInt(newPublished, 10);
+            if (year < 1000 || year > 2026) {
+                showToast("Published year must be between 1000 and 2026.", "warning");
+                return;
+            }
         }
 
         setSubmittingBook(true);
@@ -83,7 +96,6 @@ export function Librarian() {
             }
             
             if (newPublished !== "") payload.published = newPublished;
-            if (newCover !== "") payload.cover_image = newCover;
             
 
             const response = await fetch(`http://localhost:8000/book/`, {
@@ -98,27 +110,49 @@ export function Librarian() {
             if (response.ok || response.status === 201) {
                 fetchBooks();
                 setShowAddModal(false);
+                showToast(`Book "${newName}" added successfully!`, "success");
                 // Reset form
                 setNewName("");
                 setNewAuthor("");
                 setNewGenre("Fiction");
                 setNewPageCount("");
                 setNewPublished("");
-                setNewCover("");
             } else {
                 const errData = await response.json();
-                alert(`Failed to add book: ${JSON.stringify(errData)}`);
+                showToast(`Failed to add book: ${JSON.stringify(errData)}`, "danger");
             }
         } catch (err) {
             console.error(err);
-            alert("Error trying to process the request.");
+            showToast("Error trying to process the request.", "danger");
         } finally {
             setSubmittingBook(false);
         }
     };
 
     const handleDelete = async (bookId: number) => {
-        alert("Delete feature disabled temporarily to maintain referential integrity safety on the main catalog.");
+        if (!confirm("Are you sure you want to delete this book? This will also remove it from any user's library.")) {
+            return;
+        }
+        
+        try {
+            const token = localStorage.getItem("access_token");
+            const response = await fetch(`http://localhost:8000/book/${bookId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok || response.status === 204) {
+                fetchBooks();
+                showToast("Book deleted successfully.", "success");
+            } else {
+                showToast("Failed to delete the book.", "danger");
+            }
+        } catch (err) {
+            console.error(err);
+            showToast("Error trying to process the request.", "danger");
+        }
     };
 
     return (
@@ -129,7 +163,7 @@ export function Librarian() {
                     <h4 className="text-success m-0 fw-bold">BookTracker</h4>
                 </div>
                 <div>
-                    <Link to="/" className="btn btn-outline-secondary text-light me-2 rounded-pill px-3 py-1 border-secondary">Home</Link>
+                    <button onClick={() => { localStorage.removeItem('access_token'); localStorage.removeItem('refresh_token'); localStorage.removeItem('user'); navigate('/login'); }} className="btn btn-outline-danger text-light me-2 rounded-pill px-3 py-1 border-danger">Log Out</button>
                     <Link to="/main" className="btn btn-outline-secondary text-light me-2 rounded-pill px-3 py-1 border-secondary">My Library</Link>
                     <Link to="/catalog" className="btn btn-outline-secondary text-light me-2 rounded-pill px-3 py-1 border-secondary">Browse Books</Link>
                     {currentUser?.role === 'Admin' && (
@@ -250,14 +284,18 @@ export function Librarian() {
                                     </div>
                                     <div className="col-md-6 mb-3">
                                         <label className="form-label text-secondary small">Genre</label>
-                                        <input 
-                                            type="text" 
-                                            className="form-control text-light border-secondary" 
+                                        <select 
+                                            className="form-select text-light border-secondary" 
                                             style={{ backgroundColor: '#222' }}
                                             value={newGenre}
                                             onChange={(e) => setNewGenre(e.target.value)}
-                                            placeholder="e.g. Fiction, Fantasy"
-                                        />
+                                        >
+                                            <option value="Biography">Biography</option>
+                                            <option value="History">History</option>
+                                            <option value="Fiction">Fiction</option>
+                                            <option value="Computers">Computers</option>
+                                            <option value="Science">Science</option>
+                                        </select>
                                     </div>
                                     <div className="col-md-6 mb-3">
                                         <label className="form-label text-secondary small">Page Count</label>
@@ -283,17 +321,6 @@ export function Librarian() {
                                             value={newPublished}
                                             onChange={(e) => setNewPublished(e.target.value)}
                                             placeholder="e.g. 2024"
-                                        />
-                                    </div>
-                                    <div className="col-12">
-                                        <label className="form-label text-secondary small">Cover Image URL</label>
-                                        <input 
-                                            type="url" 
-                                            className="form-control text-light border-secondary" 
-                                            style={{ backgroundColor: '#222' }}
-                                            value={newCover}
-                                            onChange={(e) => setNewCover(e.target.value)}
-                                            placeholder="https://..."
                                         />
                                     </div>
                                 </div>

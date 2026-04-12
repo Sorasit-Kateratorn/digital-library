@@ -5,15 +5,18 @@ from django.db import models
 class Book(models.Model):
     
     class Genre(models.TextChoices):
-        DRAMA = "Drama", "Drama"
-        ROMANCE = "Romance", "Romance"
+        BIOGRAPHY = "Biography", "Biography"
+        HISTORY = "History", "History"
+        FICTION = "Fiction", "Fiction"
+        COMPUTERS = "Computers", "Computers"
+        SCIENCE = "Science", "Science"
     
     name = models.CharField(max_length=50)
     author = models.CharField(max_length=50)
     created_at = models.DateField(auto_now_add=True)
-    genre = models.CharField(max_length=50, choices=Genre.choices, default=Genre.ROMANCE)
+    genre = models.CharField(max_length=50, choices=Genre.choices, default=Genre.FICTION)
     page = models.IntegerField()
-    published = models.DateField(null=True, blank=True)
+    published = models.CharField(max_length=50, null=True, blank=True)
     cover_image = models.URLField(max_length=500, blank=True, null=True)
 
 
