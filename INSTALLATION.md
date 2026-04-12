@@ -1,4 +1,50 @@
-## How to Run the System
+## How to Run the System (Docker)
+
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Sorasit-Kateratorn/digital-library.git
+cd digital-library
+```
+
+### 2. Configure environment variables
+
+Create a `.env` file inside the `backend` folder.
+
+Example:
+
+```env
+GOOGLE_BOOKS_API_KEY=your_api_key_here
+DJANGO_SECRET_KEY=your_secret_key_here
+DEBUG=True
+```
+
+> **Important:**
+> On the first startup, the backend container will automatically:
+>
+> * run Django migrations
+> * create the SQLite database file
+> * attempt to load initial book data using the Google Books API
+
+If the API key is missing or invalid, the backend will still start, but the initial book data may not be loaded.
+
+### 3. Run the application
+
+```bash
+docker compose up --build
+```
+
+### 4. Access the system
+
+* Frontend: `http://localhost:5173`
+* Backend API: `http://localhost:8000`
+
+
+
+
+
+## How to Run the System (Manual)
 
 ### 1. Clone the Repository
 
