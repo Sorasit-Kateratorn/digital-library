@@ -15,10 +15,13 @@ Create a `.env` file inside the `backend` folder.
 Example:
 
 ```env
-GOOGLE_BOOKS_API_KEY=your_api_key_here
-DJANGO_SECRET_KEY=your_secret_key_here
-DEBUG=True
+GOOGLE_BOOKS_API_KEY=your_google_books_api_key
 ```
+
+This API key is required for loading initial book data from Google Books API.
+
+Follow this guide to create your API key:  
+[Google Cloud Console - Create API Key](https://docs.google.com/document/d/15tecctQwQR5GLkYLmpQJ-AHTs1lfXhIG7o2U6oao5Ls/edit?usp=sharing)
 
 > **Important:**
 > On the first startup, the backend container will automatically:
