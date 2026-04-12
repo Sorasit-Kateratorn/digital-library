@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useToast } from "../../hooks/useToast";
+import { useConfirm } from "../../hooks/useConfirm";
 
 export function Admin() {
     const { showToast } = useToast();
+    const { confirm } = useConfirm();
     const [users, setUsers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -91,7 +93,20 @@ export function Admin() {
                 showToast(`User "${newUsername}" added successfully!`, "success");
             } else {
                 const errData = await response.json();
-                showToast(`Failed to add user: ${JSON.stringify(errData)}`, "danger");
+                const errorMessages = Object.entries(errData)
+    .map(([field, messages]) => {
+        const formattedField =
+            field.charAt(0).toUpperCase() + field.slice(1);
+
+        return `${formattedField}: ${
+            Array.isArray(messages)
+                ? messages.join(", ")
+                : messages
+        }`;
+    })
+    .join(" | ");
+
+showToast(errorMessages, "danger");
             }
         } catch (err) {
             console.error(err);
@@ -102,7 +117,14 @@ export function Admin() {
     };
 
     const handleDelete = async (userId: number) => {
-        if (!confirm("Are you sure you want to delete this user? This action cannot be undone.")) return;
+        const isConfirmed = await confirm({
+            title: "Delete User",
+            message: "Are you sure you want to delete this user? This action cannot be undone.",
+            variant: "danger",
+            confirmLabel: "Delete"
+        });
+
+        if (!isConfirmed) return;
 
         try {
             const token = localStorage.getItem("access_token");

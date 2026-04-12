@@ -37,11 +37,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 import { ToastProvider } from "./context/ToastContext";
+import { ConfirmProvider } from "./context/ConfirmContext";
 
 export default function App() {
     return (
         <ToastProvider>
-            <Outlet />
+            <ConfirmProvider>
+                <Outlet />
+            </ConfirmProvider>
         </ToastProvider>
     );
 }

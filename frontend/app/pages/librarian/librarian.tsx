@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useToast } from "../../hooks/useToast";
+import { useConfirm } from "../../hooks/useConfirm";
 
 export function Librarian() {
     const { showToast } = useToast();
+    const { confirm } = useConfirm();
     const [books, setBooks] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -91,6 +93,14 @@ export function Librarian() {
             };
 
             const pageCountNumber = parseInt(newPageCount as string, 10);
+
+            if (newPageCount !== "" && (isNaN(pageCountNumber) || pageCountNumber <= 0)) {
+    showToast("Page count must be a positive number.", "warning");
+    return;
+}
+
+
+
             if (!isNaN(pageCountNumber)) {
                 payload.page = pageCountNumber;
             }
@@ -119,7 +129,20 @@ export function Librarian() {
                 setNewPublished("");
             } else {
                 const errData = await response.json();
-                showToast(`Failed to add book: ${JSON.stringify(errData)}`, "danger");
+                const errorMessages = Object.entries(errData)
+    .map(([field, messages]) => {
+        const formattedField =
+            field.charAt(0).toUpperCase() + field.slice(1);
+
+        return `${formattedField}: ${
+            Array.isArray(messages)
+                ? messages.join(", ")
+                : messages
+        }`;
+    })
+    .join(" | ");
+
+showToast(errorMessages, "danger");
             }
         } catch (err) {
             console.error(err);
@@ -130,9 +153,14 @@ export function Librarian() {
     };
 
     const handleDelete = async (bookId: number) => {
-        if (!confirm("Are you sure you want to delete this book? This will also remove it from any user's library.")) {
-            return;
-        }
+        const isConfirmed = await confirm({
+            title: "Delete Book",
+            message: "Are you sure you want to delete this book? This will also remove it from any user's library.",
+            variant: "danger",
+            confirmLabel: "Delete"
+        });
+
+        if (!isConfirmed) return;
         
         try {
             const token = localStorage.getItem("access_token");
@@ -301,6 +329,7 @@ export function Librarian() {
                                         <label className="form-label text-secondary small">Page Count</label>
                                         <input 
                                             type="number" 
+                                            min="1"
                                             className="form-control text-light border-secondary" 
                                             style={{ backgroundColor: '#222' }}
                                             value={newPageCount}

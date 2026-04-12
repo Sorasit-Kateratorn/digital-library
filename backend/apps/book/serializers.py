@@ -5,6 +5,12 @@ from .models import Book
 class BookSerializers(serializers.ModelSerializer):
     published = serializers.CharField(allow_blank=True, allow_null=True, required=False)
 
+
+    def validate_page(self, value):
+        if value is not None and value <= 0:
+            raise serializers.ValidationError("Page count must be greater than 0.")
+        return value
+
     def validate_published(self, value):
         if value:
             if not re.match(r'^\d{4}$', value):
