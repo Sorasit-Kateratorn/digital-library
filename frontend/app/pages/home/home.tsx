@@ -37,43 +37,90 @@ export function Home() {
                                 <h1 className="mb-2">Track Your Reading Journey</h1>
                                 <p className="fs-5 text-secondary mb-4">Monitor your reading progress, rate your favorite books, and achieve your reading goals.</p>
                                 <div>
-                                    <a href="/login" className="btn btn-success me-2">Get Started</a>
-                                    <button className="btn btn-outline-success">
-                                        <i className="bi bi-box-arrow-in-right me-2"></i>
-                                        Browse Books
-                                    </button>
+                                    <a href="/login" className="btn btn-success me-2 px-4 rounded-pill">Get Started</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
-                <section id="service">
+                <section id="service" className="py-5">
                     <div className="container">
-                        <div className="row">
-                            <div className="col-4">
-                                <div className="card bg-dark text-light border-success shadow rounded-4 h-100">
-                                    <div className="card-body">
+                        <div className="row g-4">
+                            <div className="col-md-4">
+                                <div 
+                                    className="card text-light border-0 shadow-sm h-100"
+                                    style={{ 
+                                        backgroundColor: '#161616',
+                                        borderRadius: '12px',
+                                        transition: 'all 0.3s ease'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(-5px)';
+                                        e.currentTarget.style.backgroundColor = '#1e1e1e';
+                                        e.currentTarget.style.boxShadow = '0 10px 20px rgba(0,0,0,0.5)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.transform = 'none';
+                                        e.currentTarget.style.backgroundColor = '#161616';
+                                        e.currentTarget.style.boxShadow = 'none';
+                                    }}
+                                >
+                                    <div className="card-body p-4">
                                         <i className="bi bi-book-half fs-1 text-success mb-3 d-block"></i>
-                                        <p className="fw-bold">Track Progress</p>
-                                        <p className="">Monitor your reading progress with detailed tracking for each book you're reading.</p>
+                                        <h5 className="fw-bold mb-3">Track Progress</h5>
+                                        <p className="text-secondary">Monitor your reading progress with detailed tracking for each book you're reading.</p>
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-4">
-                                <div className="card bg-dark text-light border-success shadow rounded-4 h-100">
-                                    <div className="card-body">
+                            <div className="col-md-4">
+                                <div 
+                                    className="card text-light border-0 shadow-sm h-100"
+                                    style={{ 
+                                        backgroundColor: '#161616',
+                                        borderRadius: '12px',
+                                        transition: 'all 0.3s ease'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(-5px)';
+                                        e.currentTarget.style.backgroundColor = '#1e1e1e';
+                                        e.currentTarget.style.boxShadow = '0 10px 20px rgba(0,0,0,0.5)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.transform = 'none';
+                                        e.currentTarget.style.backgroundColor = '#161616';
+                                        e.currentTarget.style.boxShadow = 'none';
+                                    }}
+                                >
+                                    <div className="card-body p-4">
                                         <i className="bi bi-bookshelf fs-1 text-success mb-3 d-block"></i>
-                                        <p className="fw-bold">Manage Library</p>
-                                        <p className="">Organize your books with ratings, notes, and custom categories for easy access.</p>
+                                        <h5 className="fw-bold mb-3">Manage Library</h5>
+                                        <p className="text-secondary">Organize your books with ratings, notes and filter categories for easy access.</p>
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-4">
-                                <div className="card bg-dark text-light border-success shadow rounded-4 h-100">
-                                    <div className="card-body">
+                            <div className="col-md-4">
+                                <div 
+                                    className="card text-light border-0 shadow-sm h-100"
+                                    style={{ 
+                                        backgroundColor: '#161616',
+                                        borderRadius: '12px',
+                                        transition: 'all 0.3s ease'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(-5px)';
+                                        e.currentTarget.style.backgroundColor = '#1e1e1e';
+                                        e.currentTarget.style.boxShadow = '0 10px 20px rgba(0,0,0,0.5)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.transform = 'none';
+                                        e.currentTarget.style.backgroundColor = '#161616';
+                                        e.currentTarget.style.boxShadow = 'none';
+                                    }}
+                                >
+                                    <div className="card-body p-4">
                                         <i className="bi bi-graph-up fs-1 text-success mb-3 d-block"></i>
-                                        <p className="fw-bold">Set Goals</p>
-                                        <p className="">Set reading goals and track your achievements to stay motivated and consistent.</p>
+                                        <h5 className="fw-bold mb-3">Set Goals</h5>
+                                        <p className="text-secondary">Set reading goals and track your achievements to stay motivated and consistent.</p>
                                     </div>
                                 </div>
                             </div>
