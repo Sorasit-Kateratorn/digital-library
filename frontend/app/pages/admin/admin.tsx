@@ -117,6 +117,12 @@ showToast(errorMessages, "danger");
     };
 
     const handleDelete = async (userId: number) => {
+
+        if (userId === currentUser?.id) {
+            showToast("You cannot delete your own account.", "danger");
+            return;
+        }
+
         const isConfirmed = await confirm({
             title: "Delete User",
             message: "Are you sure you want to delete this user? This action cannot be undone.",
@@ -237,13 +243,17 @@ showToast(errorMessages, "danger");
                                                     </td>
                                                     <td className="py-3">{formatDate(user.date_joined)}</td>
                                                     <td className="px-4 py-3 text-end">
-                                                        <button 
-                                                            className="btn btn-link text-danger p-0 border-0"
-                                                            onClick={() => handleDelete(user.id)}
-                                                            title="Delete User"
-                                                        >
-                                                            <i className="bi bi-trash"></i>
-                                                        </button>
+                                                        {currentUser?.id === user.id ? (
+                                                            <span className="text-secondary small">Current User</span>
+                                                        ) : (
+                                                            <button 
+                                                                className="btn btn-link text-danger p-0 border-0"
+                                                                onClick={() => handleDelete(user.id)}
+                                                                title="Delete User"
+                                                            >
+                                                                <i className="bi bi-trash"></i>
+                                                            </button>
+                                                        )}
                                                     </td>
                                                 </tr>
                                             ))

@@ -76,8 +76,11 @@ class UserView(APIView):
 
     def delete(self, request, pk=None):
         if not request.user.is_authenticated or request.user.role != 'Admin':
-            return Response({"detail": "Forbidden. Admin access required."}, status=status.HTTP_403_FORBIDDEN)
-            
+            return Response(
+                {"detail": "Forbidden. Admin access required."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
         if pk is None:
             return Response(
                 {"detail": "DELETE requires pk in URL."},
@@ -85,7 +88,13 @@ class UserView(APIView):
             )
 
         user_obj = get_object_or_404(User, pk=pk)
-        # Check relational integrity logic or just rely on CASCADE. The request was "only if permission and relational integrity are handled safely". DRF will use standard Django CASCADE.
+
+        if request.user.id == user_obj.id:
+            return Response(
+                {"detail": "You cannot delete your own account."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
         user_obj.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
         
